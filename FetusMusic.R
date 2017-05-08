@@ -2,52 +2,152 @@
 # Fetal Movement Analysis
 # Niklas Braun
 ####
+# Libraries ----
+library(ggplot2)
+library(ggthemes)
+
 # Data import ----
 classical.silence <- readxl::read_excel(
   'Test_Data_May7.xlsx', 
   sheet = 1,
-  skip = 2)[, -7] # Extra Unknown column
+  skip = 2)[, 1:6] # Extra Unknown column
 colnames(classical.silence) <- c(
   'Time',
   'Ch. A',
   'Ch. B',
   'Ch. C',
   'Move #',
-  'Move Duration'
+  'Move Time'
 )
-classical.65 <- readxl::read_excel(
+classical.low <- readxl::read_excel(
   'Test_Data_May7.xlsx', 
   sheet = 2,
-  skip = 2)[, -7] # Extra Unknown column
-colnames(classical.65) <- c(
+  skip = 2)[, 1:6] # Extra Unknown column
+colnames(classical.low) <- c(
   'Time',
   'Ch. A',
   'Ch. B',
   'Ch. C',
   'Move #',
-  'Move Duration'
+  'Move Time'
 )
-classical.75 <- readxl::read_excel(
+classical.med <- readxl::read_excel(
   'Test_Data_May7.xlsx', 
   sheet = 3,
-  skip = 2)[, -7] # Extra Unknown column
-colnames(classical.75) <- c(
+  skip = 2)[, 1:6] # Extra Unknown column
+colnames(classical.med) <- c(
   'Time',
   'Ch. A',
   'Ch. B',
   'Ch. C',
   'Move #',
-  'Move Duration'
+  'Move Time'
 )
-classical.85 <- readxl::read_excel(
+classical.high <- readxl::read_excel(
   'Test_Data_May7.xlsx', 
   sheet = 4,
-  skip = 2)[, -7] # Extra Unknown column
-colnames(classical.85) <- c(
+  skip = 2)[, 1:6] # Extra Unknown column
+colnames(classical.high) <- c(
   'Time',
   'Ch. A',
   'Ch. B',
   'Ch. C',
   'Move #',
-  'Move Duration'
+  'Move Time'
 )
+
+# Data Cleaning ----
+classical.silence$Movelog <- 0
+for (time in na.omit(classical.silence$`Move Time`)){
+  classical.silence$Movelog[classical.silence$Time == time] <- 1
+}
+classical.low$Movelog <- 0
+for (time in na.omit(classical.low$`Move Time`)){
+  classical.low$Movelog[classical.low$Time == time] <- 1
+}
+classical.med$Movelog <- 0
+for (time in na.omit(classical.med$`Move Time`)){
+  classical.med$Movelog[classical.med$Time == time] <- 1
+}
+classical.high$Movelog <- 0
+for (time in na.omit(classical.high$`Move Time`)){
+  classical.high$Movelog[classical.high$Time == time] <- 1
+}
+
+# Initial Exploration ----
+
+silence <- ggplot(data = classical.silence) + 
+  geom_jitter(aes(Time, `Ch. A`, color = "A")) + 
+  geom_jitter(aes(Time, `Ch. B`, color = "B")) + 
+  geom_jitter(aes(Time, `Ch. C`, color = "C")) + 
+  geom_vline(
+    xintercept = classical.silence$Time[classical.silence$Movelog == 1],
+    color = '#FF3300') +
+  scale_colour_manual(
+    name = "Channel", 
+    values = c("A" = '#99CCFF', "B" = '#CA7AD2', "C" = '#FF6666')) +
+  theme_gray(base_size = 18) + 
+  theme(axis.text = element_text(color = "black"),
+        legend.key.height  = grid::unit(0.1, "npc")) +
+  labs(x = "Time (s)", fontface = "bold") + 
+  labs(y = "Acceleration (V)") +
+  labs(title = "Acceleration, No Music",
+       subtitle = 'Vertical lines signify distinct fetal movement')
+print(silence)
+
+low <- ggplot(data = classical.low) + 
+  geom_jitter(aes(Time, `Ch. A`, color = "A")) + 
+  geom_jitter(aes(Time, `Ch. B`, color = "B")) + 
+  geom_jitter(aes(Time, `Ch. C`, color = "C")) + 
+  geom_vline(
+    xintercept = classical.low$Time[classical.low$Movelog == 1],
+    color = '#FF3300') +
+  scale_colour_manual(
+    name = "Channel", 
+    values = c("A" = '#99CCFF', "B" = '#CA7AD2', "C" = '#FF6666')) +
+  theme_gray(base_size = 18) + 
+  theme(axis.text = element_text(color = "black"),
+        legend.key.height  = grid::unit(0.1, "npc")) +
+  labs(x = "Time (s)", fontface = "bold") + 
+  labs(y = "Acceleration (V)") +
+  labs(title = "Acceleration, 65 db Music",
+       subtitle = 'Vertical lines signify distinct fetal movement')
+print(low)
+
+med <- ggplot(data = classical.med) + 
+  geom_jitter(aes(Time, `Ch. A`, color = "A")) + 
+  geom_jitter(aes(Time, `Ch. B`, color = "B")) + 
+  geom_jitter(aes(Time, `Ch. C`, color = "C")) + 
+  geom_vline(
+    xintercept = classical.med$Time[classical.med$Movelog == 1],
+    color = '#FF3300')+
+  scale_colour_manual(
+    name = "Channel", 
+    values = c("A" = '#99CCFF', "B" = '#CA7AD2', "C" = '#FF6666')) +
+  theme_gray(base_size = 18) + 
+  theme(axis.text = element_text(color = "black"),
+        legend.key.height  = grid::unit(0.1, "npc")) +
+  labs(x = "Time (s)", fontface = "bold") + 
+  labs(y = "Acceleration (V)") +
+  labs(title = "Acceleration, 75 db Music",
+       subtitle = 'Vertical lines signify distinct fetal movement')
+print(med)
+
+high <- ggplot(data = classical.high) + 
+  geom_jitter(aes(Time, `Ch. A`, color = "A")) + 
+  geom_jitter(aes(Time, `Ch. B`, color = "B")) + 
+  geom_jitter(aes(Time, `Ch. C`, color = "C")) + 
+  geom_vline(
+    xintercept = classical.high$Time[classical.high$Movelog == 1],
+    color = '#FF3300')+
+  scale_colour_manual(
+    name = "Channel", 
+    values = c("A" = '#99CCFF', "B" = '#CA7AD2', "C" = '#FF6666')) +
+  theme_gray(base_size = 18) + 
+  theme(axis.text = element_text(color = "black"),
+        legend.key.height  = grid::unit(0.1, "npc")) +
+  labs(x = "Time (s)", fontface = "bold") + 
+  labs(y = "Acceleration (V)") +
+  labs(title = "Acceleration, 85 db Music",
+       subtitle = 'Vertical lines signify distinct fetal movement')
+print(high)
