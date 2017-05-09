@@ -165,14 +165,14 @@ classical <- rbind(
   classical.med[, -5:-7],
   classical.high[, -5:-7]
 )
-
+classical$Level <- factor(classical$Level)
 # Export to csv
 write.csv(classical, file = 'ClassicalMusicVoltages.csv')
 
 # New Exploration ----
 
 ch.A <- ggplot(data = classical) + 
-  geom_jitter(aes(Time, `Ch. A`, color = factor(Level)), alpha = 0.5) + 
+  geom_jitter(aes(Time, `Ch. A`, color = Level), alpha = 0.5) + 
   theme_gray(base_size = 18) + 
   theme(axis.text = element_text(color = "black"),
         legend.key.height  = grid::unit(0.1, "npc")) +
@@ -187,7 +187,7 @@ ch.A <- ggplot(data = classical) +
 print(ch.A)
 
 ch.B <- ggplot(data = classical) + 
-  geom_jitter(aes(Time, `Ch. B`, color = factor(Level)), alpha = 0.5) + 
+  geom_jitter(aes(Time, `Ch. B`, color = Level), alpha = 0.5) + 
   theme_gray(base_size = 18) + 
   theme(axis.text = element_text(color = "black"),
         legend.key.height  = grid::unit(0.1, "npc")) +
@@ -202,7 +202,7 @@ ch.B <- ggplot(data = classical) +
 print(ch.B)
 
 ch.C <- ggplot(data = classical) + 
-  geom_jitter(aes(Time, `Ch. C`, color = factor(Level)), alpha = 0.5) + 
+  geom_jitter(aes(Time, `Ch. C`, color = Level), alpha = 0.5) + 
   theme_gray(base_size = 18) + 
   theme(axis.text = element_text(color = "black"),
         legend.key.height  = grid::unit(0.1, "npc")) +
@@ -215,3 +215,9 @@ ch.C <- ggplot(data = classical) +
   labs(y = "Acceleration (V)") +
   labs(title = "Acceleration, Channel C")
 print(ch.C)
+
+# Basic Regression ----
+## This is not going to be correct. The data has not been fixed to reflect 
+# noise correction or acceleration.
+ch.a.model <- lm(`Ch. A` ~ Level, classical)
+summary(ch.a.model)
