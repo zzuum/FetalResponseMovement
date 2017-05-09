@@ -76,6 +76,7 @@ for (time in na.omit(classical.high$`Move Time`)){
 }
 
 # Initial Exploration ----
+# Exploration by music volume
 
 silence <- ggplot(data = classical.silence) + 
   geom_jitter(aes(Time, `Ch. A`, color = "A")) + 
@@ -171,6 +172,7 @@ classical$Level <- factor(classical$Level)
 write.csv(classical, file = 'ClassicalMusicVoltages.csv')
 
 # New Exploration ----
+# Exploration by Channel
 
 ch.A <- ggplot(data = classical) + 
   geom_jitter(aes(Time, `Ch. A`, color = Level), alpha = 0.5) + 
