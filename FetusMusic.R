@@ -151,3 +151,67 @@ high <- ggplot(data = classical.high) +
   labs(title = "Acceleration, 85 db Music",
        subtitle = 'Vertical lines signify distinct fetal movement')
 print(high)
+
+# Combining Data ----
+
+classical.silence$Level <- 0
+classical.low$Level <- 1
+classical.med$Level <- 2
+classical.high$Level <- 3
+
+classical <- rbind(
+  classical.silence[, -5:-7],
+  classical.low[, -5:-7],
+  classical.med[, -5:-7],
+  classical.high[, -5:-7]
+)
+
+# Export to csv
+write.csv(classical, file = 'ClassicalMusicVoltages.csv')
+
+# New Exploration ----
+
+ch.A <- ggplot(data = classical) + 
+  geom_jitter(aes(Time, `Ch. A`, color = factor(Level)), alpha = 0.5) + 
+  theme_gray(base_size = 18) + 
+  theme(axis.text = element_text(color = "black"),
+        legend.key.height  = grid::unit(0.1, "npc")) +
+  scale_colour_manual(
+    name = "Sound Level", 
+    values = c('black', 'brown', 'orange', 'yellow'),
+    labels = c('0 db', '65 db', '75 db', '85 db')) +
+  ylim(c(1.9, 2.1)) +
+  labs(x = "Time (s)", fontface = "bold") + 
+  labs(y = "Acceleration (V)") +
+  labs(title = "Acceleration, Channel A")
+print(ch.A)
+
+ch.B <- ggplot(data = classical) + 
+  geom_jitter(aes(Time, `Ch. B`, color = factor(Level)), alpha = 0.5) + 
+  theme_gray(base_size = 18) + 
+  theme(axis.text = element_text(color = "black"),
+        legend.key.height  = grid::unit(0.1, "npc")) +
+  scale_colour_manual(
+    name = "Sound Level", 
+    values = c('black', 'brown', 'orange', 'yellow'),
+    labels = c('0 db', '65 db', '75 db', '85 db')) +
+  ylim(c(1.75, 1.85)) +
+  labs(x = "Time (s)", fontface = "bold") + 
+  labs(y = "Acceleration (V)") +
+  labs(title = "Acceleration, Channel B")
+print(ch.B)
+
+ch.C <- ggplot(data = classical) + 
+  geom_jitter(aes(Time, `Ch. C`, color = factor(Level)), alpha = 0.5) + 
+  theme_gray(base_size = 18) + 
+  theme(axis.text = element_text(color = "black"),
+        legend.key.height  = grid::unit(0.1, "npc")) +
+  scale_colour_manual(
+    name = "Sound Level", 
+    values = c('black', 'brown', 'orange', 'yellow'),
+    labels = c('0 db', '65 db', '75 db', '85 db')) +
+  ylim(c(1.75, 1.85)) + 
+  labs(x = "Time (s)", fontface = "bold") + 
+  labs(y = "Acceleration (V)") +
+  labs(title = "Acceleration, Channel C")
+print(ch.C)
