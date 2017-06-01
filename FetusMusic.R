@@ -1,4 +1,4 @@
-# MAE 207 Project
+# MAE 207 Project ----
 # Fetal Movement Analysis
 # Niklas Braun
 ####
@@ -224,3 +224,30 @@ print(ch.C)
 # noise correction or acceleration.
 ch.a.model <- lm(`Ch. A` ~ Level, classical)
 summary(ch.a.model)
+# Correct Data Import ----
+sil <- c(11.713,7.575,17.096,17.585,14.899,11.969,7.318,6.598,13.190,13.190)
+db65 <- c(8.202,8.446,12.108,9.667,8.202,5.470,8.156,11.620,6.372,10.109,
+          10.643,8.888,12.596,8.400,7.713,9.497,9.911,6.935,6.935)
+db75 <- c(8.522,6.895,5.837,8.278,9.255,9.987,6.163,8.116,8.323,8.079,10.276,
+          6.777,8.604,8.604)
+
+total <- c()
+leve <- c()
+for (i in sil){
+  total <- append(total, i)
+  leve <- append(leve, 0)
+}
+for (i in db65){
+  total <- append(total, i)
+  leve <- append(leve, 65)
+}
+for (i in db75){
+  total <- append(total, i)
+  leve <- append(leve, 75)
+}
+data <- data.frame(total, leve)
+data$leve <- factor(data$leve)
+
+real.model <- lm(total ~ leve, data = data)
+anova(real.model)
+real.model
